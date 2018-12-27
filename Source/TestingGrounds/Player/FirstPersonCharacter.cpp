@@ -80,22 +80,33 @@ void AFirstPersonCharacter::BeginPlay()
 
 	if (GunBlueprint == nullptr) 
 	{
-		UE_LOG(LogTemp,Warning,TEXT("Gun Blueprint missing"))
+		UE_LOG(LogTemp, Warning, TEXT("Gun Blueprint missing"))
 		return; 
 	}
+	
 	Gun = GetWorld()->SpawnActor<AGun>(GunBlueprint);
 
 	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
 	Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
+	Gun->AnimInstance = Mesh1P->GetAnimInstance();
 	
-	Mesh1P->SetHiddenInGame(false, true);
-
-	// Bind fire event
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, Gun, &AGun::OnFire);
+	if (Gun == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Gun is missing"))
+			return;
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Input
+
+void AFirstPersonCharacter::OnFire()
+{
+	if (Gun)
+	{
+		Gun->OnFire();
+	}
+}
 
 void AFirstPersonCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
@@ -106,7 +117,8 @@ void AFirstPersonCharacter::SetupPlayerInputComponent(class UInputComponent* Pla
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
-	
+	// Bind fire event
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AFirstPersonCharacter::OnFire);
 	
 	// Enable touchscreen input
 	EnableTouchscreenMovement(PlayerInputComponent);
