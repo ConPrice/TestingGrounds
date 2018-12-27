@@ -1,7 +1,7 @@
 // Copyright 1998-2018 Epic Games, Inc. All Rights Reserved.
 
 #include "FirstPersonCharacter.h"
-
+#include "Components/SkeletalMeshComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -89,6 +89,9 @@ void AFirstPersonCharacter::BeginPlay()
 	Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
 	
 	Mesh1P->SetHiddenInGame(false, true);
+
+	// Bind fire event
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, Gun, &AGun::OnFire);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -103,9 +106,8 @@ void AFirstPersonCharacter::SetupPlayerInputComponent(class UInputComponent* Pla
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
-	// Bind fire event
-	//PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AFirstPersonCharacter::OnFire);
-
+	
+	
 	// Enable touchscreen input
 	EnableTouchscreenMovement(PlayerInputComponent);
 

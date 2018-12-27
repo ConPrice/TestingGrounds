@@ -68,6 +68,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 		TSubclassOf<class AGun> GunBlueprint;
 
+	class UInputComponent* PlayerInputComponent;
+
 private:
 	AGun* Gun;
 
