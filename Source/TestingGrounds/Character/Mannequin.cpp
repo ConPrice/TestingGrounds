@@ -5,6 +5,8 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "TestingGrounds/Weapons/Gun.h"
 
+class AActor;
+
 // Sets default values
 AMannequin::AMannequin()
 {
@@ -65,6 +67,7 @@ void AMannequin::Tick(float DeltaTime)
 void AMannequin::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
 }
 
 void AMannequin::UnPossessed() {
